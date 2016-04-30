@@ -1,0 +1,555 @@
+\documentclass[letterpaper,12pt,]{article}
+
+\usepackage{titling}
+
+\setlength{\droptitle}{5in}   % This is your set screw
+
+\usepackage[%
+    left=1in,%
+    right=1in,%
+    top=1in,%
+    bottom=1.0in,%
+    paperheight=11in,%
+    paperwidth=8.5in%
+]{geometry}%
+\usepackage{comment}
+
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage[section]{placeins}
+\usepackage[font=small,skip=-2pt]{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{pdfpages}
+
+
+\pagestyle{empty} % Remove page numbering
+\linespread{1} % Line Spacing
+
+\begin{document}
+
+% First Order Partial Derivative
+\newcommand\del[2]
+{%
+\dfrac{\partial#1}{\partial#2}
+}
+
+% First Order Total Derivative
+\newcommand\Dt[2]
+{%
+\dfrac{d#1}{d#2}
+}
+
+% Math Bold Font
+\newcommand\mbf[1]
+{%
+\mathbf{#1}
+}
+
+% Math Bold Symbol
+\newcommand\mbs[1]
+{%
+\boldsymbol{#1}
+}
+
+% Bold x_volume
+\newcommand\xvol[0]
+{%
+\mbf{x_{vol}}
+}
+
+% Bold x_surf
+\newcommand\xsurf[0]
+{%
+\mbf{x_{surf}}
+}
+
+% Bold x_rbf
+\newcommand\xrbf[0]
+{%
+\mbf{x_{rbf}}
+}
+
+% Bold alpha
+\newcommand\balfa[0]
+{%
+\mbs{\alpha}
+}
+
+% Bold R
+\newcommand\bR[0]
+{%
+\mbf{R}
+}
+
+% Bold w
+\newcommand\bw[0]
+{%
+\mbf{w}
+}
+
+% Invert a Matrix with Square Brackets
+\newcommand\inv[1]
+{%
+\left[#1\right]^{-1}
+}
+
+%Square Brackets
+\newcommand\sqbr[1]
+{%
+\left[#1\right]
+}
+
+% N_xvol
+\newcommand\nrbf[0]
+{%
+N_{rbf}
+}
+
+% N_xvol
+\newcommand\nxvol[0]
+{%
+N_{xvol}
+}
+
+% N_cell
+\newcommand\ncell[0]
+{%
+N_{cell}
+}
+
+% N_des
+\newcommand\ndes[0]
+{%
+N_{des}
+}
+
+% Bold psi
+\newcommand\bpsi[0]
+{%
+\mbs{\psi}
+}
+
+% Bold eta
+\newcommand\blam[0]
+{%
+\mbs{\lambda}
+}
+
+% Smaller font in equation
+\newcommand\smt[1]
+{%
+\text{\footnotesize$#1$}
+}
+% Used to create an alignment character & under equations
+\newcommand\sizealign[2]
+{%
+	&& \smt{\left[ #1 \times #2 \right]}
+}
+
+\section*{Mesh Movement}
+
+The volume mesh points are moved by the RBF points which are determined by the surface points.
+The surface points are parametrized through the design variables.
+Therefore, the volume mesh points are a function of the design variables.
+
+\begin{equation}
+	\xvol 
+	= 
+	\xvol(
+	\xrbf(
+	\xsurf(
+	\balfa))) 
+	= 
+	\xvol(\balfa)
+\end{equation}
+
+The RBF method has the form in Equation \ref{eq:rbf}, which can be written in a system of linear equation.
+The weights can be solved by using the displacement of the RBF points as shown in Equation \ref{eq:solveRBF}.
+The displacements of the volume mesh points are found using weights as shown in Equation \ref{eq:disprbf}.
+
+\begin{equation}
+	f(x) = \sum_{i=1}^n w_i \phi(\|x - x_i\|)
+	\label{eq:rbf}
+\end{equation}
+
+\begin{equation}
+	\Delta \xrbf
+		= \mbf{M} 
+		  \bw
+	\label{eq:solveRBF}
+\end{equation}
+
+
+\begin{equation}
+	\Delta \xrbf 
+		= \mbf{A} 
+		  \bw
+		= \mbf{A}
+		  \inv{\mbf{M}}
+		  \Delta \xrbf
+	\label{eq:disprbf}
+\end{equation}
+
+Since every processor has all the necessary information to move its own volume points, the mesh deformation can be done fully in parallel.
+Finally, it is possible to define the mesh sensitivities with Equation \ref{eq:meshsens} \& \ref{eq:fullmeshsens}.
+
+\begin{equation}
+	\Dt{\xvol}{\xrbf}
+	= \dfrac{\Delta \xvol}{\Delta \xrbf}
+		= \mbf{A}
+		  \inv{\mbf{M}}
+	\label{eq:meshsens}
+\end{equation}
+
+\begin{equation}
+	\Dt{\xvol}{\balfa}
+	=
+	\Dt{\xvol}{\xrbf}
+	\Dt{\xrbf}{\xsurf}
+	\Dt{\xsurf}{\balfa}
+	=
+	\mbf{A}
+	\inv{\mbf{M}}
+	\Dt{\xrbf}{\xsurf}
+	\Dt{\xsurf}{\balfa}
+	\label{eq:fullmeshsens}
+\end{equation}
+
+\section*{First-Order Sensitivities}
+
+\subsection*{Flow Sensitivities}
+
+The cost function $L$ in Equation \ref{eq:cost} is a function of the flow state variables $\bw$ and the geometry $\xvol$.
+The state variables are constrained by the steady-state solution of the Navier-Stokes, where the residual is zero as shown in Equation \ref{eq:flowres}.
+
+\begin{equation}
+	L = L(\bw, \xvol)
+	\label{eq:cost}
+\end{equation}
+
+\begin{equation}
+	\bR = \bR(\bw, \xvol) = \mbf{0}
+	\label{eq:flowres}
+\end{equation}
+
+The gradient of the cost function and the flow residual are defined through the chain rule in Equation \ref{eq:dIdDes_plain} \& \ref{eq:dRdDes_plain}.
+
+\begin{equation}
+	\Dt{L( \bw, \xvol ) } {\balfa}
+	= 
+    \del{L}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{L}{\mbf{x}_{vol}}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	\label{eq:dIdDes_plain}
+\end{equation}
+
+\begin{equation}
+	\Dt{\bR( \bw, \xvol ) } {\balfa}
+	= 
+    \del{\bR}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{\bR}{\mbf{x}_{vol}}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	=
+	\mbf{0}
+	\label{eq:dRdDes_plain}
+\end{equation}
+
+\subsubsection*{Direct Differentiation}
+
+Equation \ref{eq:dRdDes_plain} is used to compute the derivative of the state variables with respect to the design variables ${d\bw}/{d\balfa}$.
+The Jacobian of the residual is required and the linear system is solved for $\ndes$ RHS vectors.
+
+\begin{equation}
+\begin{alignedat}{5}
+	&\del{\bR}{\bw}
+	&&\Dt{\bw}{\balfa}
+	&&=
+    &&-
+	\del{\bR}{\mbf{x}_{vol}}
+	&&\Dt{\mbf{x}_{vol}}{\balfa}
+	\\
+	& \smt{\left[ \ncell \times \ncell \right]}
+	\sizealign{\ncell}{\ndes}
+	&&=
+	\sizealign{\ncell}{\nxvol}
+	\sizealign{\nxvol}{\ndes}
+	\label{eq:dWdDes}
+\end{alignedat}
+\end{equation}
+
+
+\subsubsection*{Adjoint Variable}
+
+It is possible to augment the gradient of the cost function with an adjoint variable that multiplies the gradient of residual since it is zero.
+Equation \ref{eq:adjointDerivation} shows the augmented cost function being re-arranged into flow and metric contributions.
+
+
+\begin{equation}
+\begin{split}
+	\Dt{L_a( \bw, \xvol )}{\balfa} &= 
+	\Dt{L( \bw, \xvol )}{\balfa} +
+	\bpsi^T
+	\Dt{\bR( \bw, \xvol }{\balfa})
+\\
+	&= 
+    \del{L}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{L}{\mbf{x}_{vol}}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	+ 
+	\bpsi^T
+	\sqbr{
+		\del{\bR}{\bw}
+		\Dt{\bw}{\balfa}
+		+
+		\del{\bR}{\mbf{x}_{vol}
+	}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	}
+\\
+	&=
+    \underbrace
+    {
+		\sqbr{
+			\del{L}{\bw}
+			+
+			\mbs{\psi}^T
+			\del{\bR}{\bw}
+		}
+		\Dt{\bw}{\balfa}
+    }
+    _
+    {
+        \text{Flow Contributions}
+    }
+	+
+    \underbrace
+    {
+		\sqbr{
+			\del{L}{\mbf{x}_{vol}}
+			+
+			\mbs{\psi}^T
+			\del{\bR}{\mbf{x}_{vol}}
+		}
+		\Dt{\mbf{x}_{vol}}{\balfa}
+    }
+    _
+    {
+        \text{Metric Contributions}
+    }
+	\label{eq:adjointDerivation}
+\end{split}
+\end{equation}
+
+The goal of the adjoint variable is to avoid computing the expensive sensitivities by transfering their weights into cheaper sensitivities.
+In the case of the case above, the mesh sensitivies ${d\xvol}/{d\balfa}$ have simple analytical formulas, whereas ${d\bw}/{d\balfa}$ requires solving Equation \ref{eq:dWdDes}
+Therefore, the adjoint defined such that the flow contribution is zero by solving Equation \ref{eq:adjoint}.
+
+\begin{equation}
+	\bR^{\bpsi} =
+	\del{L}{\bw}
+	+
+	\mbs{\psi}^T
+	\del{\bR}{\bw}
+	= \mbf{0}
+\end{equation}
+\begin{equation}
+\begin{alignedat}{4}
+	&\sqbr{\del{\bR}{\bw}}^T
+	&&\mbs{\psi}
+	&&=
+	&&\sqbr{\del{L}{\bw}}^T
+\\	
+	& \smt{\left[ \ncell \times \ncell \right]}
+	\sizealign{\ncell}{1}
+	&&=
+	\sizealign{\ncell}{1}
+\label{eq:adjoint}
+\end{alignedat}
+\end{equation}
+
+Note that solving Equation \ref{eq:adjoint} requires the solution of a linear system with only 1 RHS vector as opposed to $\ndes$ for the direct differentiation method.
+After solving for the adjoint, the gradient of the cost function becomes Equation \ref{eq:costAfterAdjoint}.
+
+\begin{equation}
+	\Dt{L_a}{\balfa} = 
+	\sqbr{
+		\del{L}{\mbf{x}_{vol}}
+		+
+		\mbs{\psi}^T
+		\del{\bR}{\mbf{x}_{vol}}
+	}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	\label{eq:costAfterAdjoint}
+\end{equation}
+
+\subsection*{Mesh Sensitivities}
+
+The computation of the mesh sensitivities can be done once before the start of the design cycles since the mesh is always deformed from its initial shape.
+The matrix $\mbf{A}$ and $\mbf{M}$ are constant throughout the design process.
+However, as shown in Equation \ref{eq:meshsenssize}, the memory required to hold those matrices can be excessive.
+For this reason, $\mbf{A}$ is never stored and lazy evaluation is required.
+
+Unfortunately, the factorization of $\mbf{M}$ is required by every processor.
+Typical number of RBF points used is in the range of $2,000-10,000$.
+Note that $12,000$ RBF points will require 1.1 Gb of storage in each processor.
+Also, at every design cycle, the multiplication of $\mbf{A}$ has to be done with a matrix with $\ndes$ columns.
+
+\begin{equation}
+\begin{alignedat}{6}
+	&\Dt{\xvol}{\balfa}
+	&&=
+	&& \mbf{A}
+	&& \inv{\mbf{M}}      
+	&& \Dt{\xrbf}{\xsurf} 
+	&& \Dt{\xsurf}{\balfa}
+\\	                   
+	&\smt{\left[\nxvol \ndes \right]}
+	&&=
+	\sizealign{\nxvol}{\nrbf}
+	\sizealign{\nrbf}{\nrbf}
+	\sizealign{\nrbf}{N_{surf}}
+	\sizealign{N_{surf}}{\ndes}
+\label{eq:meshsenssize}
+\end{alignedat}
+\end{equation}
+
+One way to reduce CPU time of the computation of the gradient is to introduce another adjoint variable.
+This time, the cost function is augmented in Equation \ref{eq:meshadjointDerivation} by the mesh deformation residual in \ref{eq:meshres}, which come directly from Equation \ref{eq:meshsenssize}.
+
+\begin{equation}
+	\bR^{\mbf{x}} 
+	= \bR^{\mbf{x}}(\xvol) 
+	= \Dt{\xvol}{\balfa} 
+	- \mbf{A}
+	\inv{\mbf{M}}
+	\Dt{\xrbf}{\xsurf}
+	\Dt{\xsurf}{\balfa}
+	= \mbf{0}
+	\label{eq:meshres}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+	\Dt{L_a( \bw, \xvol )}{\balfa} &= 
+	\Dt{L( \bw, \xvol )}{\balfa} 
+	+
+	\bpsi^T
+	\Dt{\bR( \bw, \xvol }{\balfa})
+	+
+	\blam^T
+	\Dt{\bR^{\mbf{x}}(\xvol }{\balfa})
+\\
+	&=
+	\sqbr{
+		\del{L}{\bw}
+		+
+		\mbs{\psi}^T
+		\del{\bR}{\bw}
+	}
+	\Dt{\bw}{\balfa}
+	\\
+	&\quad+
+	\sqbr{
+		\del{L}{\mbf{x}_{vol}}
+		+
+		\mbs{\psi}^T
+		\del{\bR}{\mbf{x}_{vol}}
+		+
+		\blam^T
+	}
+	\Dt{\mbf{x}_{vol}}{\balfa}
+	\\
+	&\quad-
+	\blam^T
+	\sqbr{
+		\mbf{A}
+		\inv{\mbf{M}}
+		\Dt{\xrbf}{\xsurf}
+		\Dt{\xsurf}{\balfa}
+	}
+	\label{eq:meshadjointDerivation}
+\end{split}
+\end{equation}
+
+First, the flow adjoint is solved as Equation \ref{eq:adjoint}.
+Second, the mesh adjoint can easily be solved in Equation \ref{eq:meshadjoint} as the sum of two vectors to avoid $d\xsurf/d\balfa$.
+
+\begin{equation}
+\begin{alignedat}{6}
+	&\blam^T 
+	&&= 
+	-(&&\del{L}{\mbf{x}_{vol}}
+	&&+
+	&&\mbs{\psi}^T
+	&&\del{\bR}{\mbf{x}_{vol}})
+\\	                   
+	&\smt{\left[1 \times \nxvol \right]}
+	&&=
+	\sizealign{1}{\nxvol}
+	&&+
+	\sizealign{1}{\ncell}
+	\sizealign{\ncell}{\nxvol}
+\label{eq:meshadjoint}
+\end{alignedat}
+\end{equation}
+
+After both adjoints are solved, the gradient of the functional can be evaluated as Equation \ref{eq:gradAfter2adjoints}.
+Note that it is possible to take transpose of the gradient in order to solve a smaller system of equation.
+
+\begin{equation}
+	\Dt{L_a}{\balfa}
+	=
+	-\blam^T
+	\mbf{A}
+	\inv{\mbf{M}}
+	\Dt{\xrbf}{\xsurf}
+	\Dt{\xsurf}{\balfa}
+\label{eq:gradAfter2adjoints}
+\end{equation}
+
+Equation \ref{eq:grad2adjointsT} shows that the $\mbf{A}$ matrix multipliesa vector with 1 column as opposed to $\ndes$ and the $\mbf{M}^T$ solves for 1 column instead of $\ndes$.
+Therefore, the calculation of the gradient is now completely independent of the number of design variables.
+
+\begin{equation}
+	\sqbr{\Dt{L_a}{\balfa}}^T
+	=
+	-\sqbr{\Dt{\xsurf}{\balfa}}^{T}
+	\sqbr{\Dt{\xrbf}{\xsurf}}^{T}
+	\sqbr{\mbf{M}}^{-T}
+	\sqbr{\mbf{A}}^{T}
+	{\blam}
+	=
+	-\sqbr{\Dt{\xsurf}{\balfa}}^{T}
+	\sqbr{\Dt{\xrbf}{\xsurf}}^{T}
+	\mbf{b}
+\label{eq:grad2adjointsT}
+\end{equation}
+
+\begin{equation}
+\begin{alignedat}{5}
+	&\sqbr{\mbf{M}}^{T}
+	&&\mbf{b}
+	&&=
+	&&\sqbr{\mbf{A}}^{T}
+	&&{\blam}
+\\	                   
+	&\smt{\left[\nrbf \times \nrbf \right]}
+	\sizealign{\nrbf}{1}
+	&&=
+	\sizealign{\nrbf}{\nxvol}
+	\sizealign{\nxvol}{1}
+\label{eq:meshadjointb}
+\end{alignedat}
+\end{equation}
+
+
+
+\end{document}
