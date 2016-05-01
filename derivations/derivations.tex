@@ -30,123 +30,89 @@
 \begin{document}
 
 % First Order Partial Derivative
-\newcommand\del[2]
-{%
-\dfrac{\partial#1}{\partial#2}
-}
-
+\newcommand\del[2]{
+\dfrac{\partial#1}{\partial#2}}
+% Second Order Partial Derivative
+\newcommand\ddel[2]{
+\dfrac{\partial^2#1}{\partial#2^2}}
+% Second Order Partial Derivative
+\newcommand\ddelm[3]{
+\dfrac{\partial^2#1}{\partial#2 \partial#3}}
 % First Order Total Derivative
-\newcommand\Dt[2]
-{%
-\dfrac{d#1}{d#2}
-}
-
+\newcommand\Dt[2]{
+\dfrac{d#1}{d#2}}
+% First Order Total Derivative
+\newcommand\DDt[2]{
+\dfrac{d^2#1}{d#2^2}}
 % Math Bold Font
-\newcommand\mbf[1]
-{%
-\mathbf{#1}
-}
-
+\newcommand\mbf[1]{
+\mathbf{#1}}
 % Math Bold Symbol
-\newcommand\mbs[1]
-{%
-\boldsymbol{#1}
-}
-
+\newcommand\mbs[1]{
+\boldsymbol{#1}}
 % Bold x_volume
-\newcommand\xvol[0]
-{%
-\mbf{x_{vol}}
-}
-
+\newcommand\xvol[0]{
+\mbf{x_{vol}}}
 % Bold x_surf
-\newcommand\xsurf[0]
-{%
-\mbf{x_{surf}}
-}
-
+\newcommand\xsurf[0]{
+\mbf{x_{surf}}}
 % Bold x_rbf
-\newcommand\xrbf[0]
-{%
-\mbf{x_{rbf}}
-}
-
+\newcommand\xrbf[0]{
+\mbf{x_{rbf}}}
 % Bold alpha
-\newcommand\balfa[0]
-{%
-\mbs{\alpha}
-}
-
+\newcommand\balfa[0]{
+\mbs{\alpha}}
 % Bold R
-\newcommand\bR[0]
-{%
-\mbf{R}
-}
-
+\newcommand\bR[0]{
+\mbf{R}}
 % Bold w
-\newcommand\bw[0]
-{%
-\mbf{w}
-}
-
+\newcommand\bw[0]{
+\mbf{w}}
 % Invert a Matrix with Square Brackets
-\newcommand\inv[1]
-{%
-\left[#1\right]^{-1}
-}
-
+\newcommand\inv[1]{
+\left[#1\right]^{-1}}
+% Transpose a Matrix with Square Brackets
+\newcommand\trans[1]{
+\left[#1\right]^{T}}
 %Square Brackets
-\newcommand\sqbr[1]
-{%
-\left[#1\right]
-}
-
+\newcommand\sqbr[1]{
+\left[#1\right]}
 % N_xvol
-\newcommand\nrbf[0]
-{%
-N_{rbf}
-}
-
+\newcommand\nrbf[0]{
+N_{rbf}}
 % N_xvol
-\newcommand\nxvol[0]
-{%
-N_{xvol}
-}
-
+\newcommand\nxvol[0]{
+N_{xvol}}
 % N_cell
-\newcommand\ncell[0]
-{%
-N_{cell}
-}
-
+\newcommand\ncell[0]{
+N_{cell}}
 % N_des
-\newcommand\ndes[0]
-{%
-N_{des}
-}
-
+\newcommand\ndes[0]{
+N_{des}}
 % Bold psi
-\newcommand\bpsi[0]
-{%
-\mbs{\psi}
-}
-
+\newcommand\bpsi[0]{
+\mbs{\psi}}
 % Bold eta
-\newcommand\blam[0]
-{%
-\mbs{\lambda}
-}
-
+\newcommand\blam[0]{
+\mbs{\lambda}}
+\newcommand\bgam[0]{
+\mbs{\gamma}}
+\newcommand\bbeta[0]{
+\mbs{\beta}}
 % Smaller font in equation
-\newcommand\smt[1]
-{%
-\text{\footnotesize$#1$}
-}
+\newcommand\smt[1]{
+\text{\footnotesize$#1$}}
 % Used to create an alignment character & under equations
-\newcommand\sizealign[2]
-{%
-	&& \smt{\left[ #1 \times #2 \right]}
-}
+\newcommand\nxn[2]{
+	\smt{\left[ #1 \times #2 \right]}}
+\newcommand\nxnxn[3]{
+	\smt{\left[ #1 \times #2 \times #3\right]}}
+\newcommand\blue[1]{
+	{\color{blue}#1}}
+\newcommand\red[1]{
+	{\color{red}#1}}
+\newcommand\green[1]{
+	{\color{green}#1}}
 
 \section*{Mesh Movement}
 
@@ -234,7 +200,7 @@ The state variables are constrained by the steady-state solution of the Navier-S
 	\label{eq:flowres}
 \end{equation}
 
-The gradient of the cost function and the flow residual are defined through the chain rule in Equation \ref{eq:dIdDes_plain} \& \ref{eq:dRdDes_plain}.
+The gradient of the cost function and the flow residual are defined through the chain rule in Equation \ref{eq:dIdDes_plain} \& \ref{eq:dRdDes}.
 
 \begin{equation}
 	\Dt{L( \bw, \xvol ) } {\balfa}
@@ -242,8 +208,8 @@ The gradient of the cost function and the flow residual are defined through the 
     \del{L}{\bw}
 	\Dt{\bw}{\balfa}
 	+
-	\del{L}{\mbf{x}_{vol}}
-	\Dt{\mbf{x}_{vol}}{\balfa}
+	\del{L}{\xvol}
+	\Dt{\xvol}{\balfa}
 	\label{eq:dIdDes_plain}
 \end{equation}
 
@@ -253,16 +219,16 @@ The gradient of the cost function and the flow residual are defined through the 
     \del{\bR}{\bw}
 	\Dt{\bw}{\balfa}
 	+
-	\del{\bR}{\mbf{x}_{vol}}
-	\Dt{\mbf{x}_{vol}}{\balfa}
+	\del{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
 	=
 	\mbf{0}
-	\label{eq:dRdDes_plain}
+	\label{eq:dRdDes}
 \end{equation}
 
 \subsubsection*{Direct Differentiation}
 
-Equation \ref{eq:dRdDes_plain} is used to compute the derivative of the state variables with respect to the design variables ${d\bw}/{d\balfa}$.
+Equation \ref{eq:dRdDes} is used to compute the derivative of the state variables with respect to the design variables ${d\bw}/{d\balfa}$.
 The Jacobian of the residual is required and the linear system is solved for $\ndes$ RHS vectors.
 
 \begin{equation}
@@ -271,14 +237,14 @@ The Jacobian of the residual is required and the linear system is solved for $\n
 	&&\Dt{\bw}{\balfa}
 	&&=
     &&-
-	\del{\bR}{\mbf{x}_{vol}}
-	&&\Dt{\mbf{x}_{vol}}{\balfa}
+	\del{\bR}{\xvol}
+	&&\Dt{\xvol}{\balfa}
 	\\
 	& \smt{\left[ \ncell \times \ncell \right]}
-	\sizealign{\ncell}{\ndes}
+	&&\nxn{\ncell}{\ndes}
 	&&=
-	\sizealign{\ncell}{\nxvol}
-	\sizealign{\nxvol}{\ndes}
+	&&\nxn{\ncell}{\nxvol}
+	&&\nxn{\nxvol}{\ndes}
 	\label{eq:dWdDes}
 \end{alignedat}
 \end{equation}
@@ -301,17 +267,17 @@ Equation \ref{eq:adjointDerivation} shows the augmented cost function being re-a
     \del{L}{\bw}
 	\Dt{\bw}{\balfa}
 	+
-	\del{L}{\mbf{x}_{vol}}
-	\Dt{\mbf{x}_{vol}}{\balfa}
+	\del{L}{\xvol}
+	\Dt{\xvol}{\balfa}
 	+ 
 	\bpsi^T
 	\sqbr{
 		\del{\bR}{\bw}
 		\Dt{\bw}{\balfa}
 		+
-		\del{\bR}{\mbf{x}_{vol}
+		\del{\bR}{\xvol
 	}
-	\Dt{\mbf{x}_{vol}}{\balfa}
+	\Dt{\xvol}{\balfa}
 	}
 \\
 	&=
@@ -320,7 +286,7 @@ Equation \ref{eq:adjointDerivation} shows the augmented cost function being re-a
 		\sqbr{
 			\del{L}{\bw}
 			+
-			\mbs{\psi}^T
+			\bpsi^T
 			\del{\bR}{\bw}
 		}
 		\Dt{\bw}{\balfa}
@@ -333,12 +299,12 @@ Equation \ref{eq:adjointDerivation} shows the augmented cost function being re-a
     \underbrace
     {
 		\sqbr{
-			\del{L}{\mbf{x}_{vol}}
+			\del{L}{\xvol}
 			+
-			\mbs{\psi}^T
-			\del{\bR}{\mbf{x}_{vol}}
+			\bpsi^T
+			\del{\bR}{\xvol}
 		}
-		\Dt{\mbf{x}_{vol}}{\balfa}
+		\Dt{\xvol}{\balfa}
     }
     _
     {
@@ -348,46 +314,47 @@ Equation \ref{eq:adjointDerivation} shows the augmented cost function being re-a
 \end{split}
 \end{equation}
 
-The goal of the adjoint variable is to avoid computing the expensive sensitivities by transfering their weights into cheaper sensitivities.
-In the case of the case above, the mesh sensitivies ${d\xvol}/{d\balfa}$ have simple analytical formulas, whereas ${d\bw}/{d\balfa}$ requires solving Equation \ref{eq:dWdDes}
+The goal of the adjoint variable is to avoid computing the expensive sensitivities by transferring their weights into cheaper sensitivities.
+In the case of the case above, the mesh sensitivities ${d\xvol}/{d\balfa}$ have simple analytical formulas, whereas ${d\bw}/{d\balfa}$ requires solving Equation \ref{eq:dWdDes}
 Therefore, the adjoint defined such that the flow contribution is zero by solving Equation \ref{eq:adjoint}.
 
 \begin{equation}
+\begin{split}
 	\bR^{\bpsi} =
 	\del{L}{\bw}
 	+
-	\mbs{\psi}^T
+	\bpsi^T
 	\del{\bR}{\bw}
 	= \mbf{0}
-\end{equation}
-\begin{equation}
+	\\
 \begin{alignedat}{4}
 	&\sqbr{\del{\bR}{\bw}}^T
-	&&\mbs{\psi}
+	&&\bpsi
 	&&=
 	&&\sqbr{\del{L}{\bw}}^T
 \\	
 	& \smt{\left[ \ncell \times \ncell \right]}
-	\sizealign{\ncell}{1}
+	&&\nxn{\ncell}{1}
 	&&=
-	\sizealign{\ncell}{1}
+	&&\nxn{\ncell}{1}
 \label{eq:adjoint}
 \end{alignedat}
+\end{split}
 \end{equation}
 
 Note that solving Equation \ref{eq:adjoint} requires the solution of a linear system with only 1 RHS vector as opposed to $\ndes$ for the direct differentiation method.
-After solving for the adjoint, the gradient of the cost function becomes Equation \ref{eq:costAfterAdjoint}.
+After solving for the adjoint, the gradient of the cost function becomes Equation \ref{eq:dIdDesAfterAdjoint}.
 
 \begin{equation}
 	\Dt{L_a}{\balfa} = 
 	\sqbr{
-		\del{L}{\mbf{x}_{vol}}
+		\del{L}{\xvol}
 		+
-		\mbs{\psi}^T
-		\del{\bR}{\mbf{x}_{vol}}
+		\bpsi^T
+		\del{\bR}{\xvol}
 	}
-	\Dt{\mbf{x}_{vol}}{\balfa}
-	\label{eq:costAfterAdjoint}
+	\Dt{\xvol}{\balfa}
+	\label{eq:dIdDesAfterAdjoint}
 \end{equation}
 
 \subsection*{Mesh Sensitivities}
@@ -413,10 +380,10 @@ Also, at every design cycle, the multiplication of $\mbf{A}$ has to be done with
 \\	                   
 	&\smt{\left[\nxvol \ndes \right]}
 	&&=
-	\sizealign{\nxvol}{\nrbf}
-	\sizealign{\nrbf}{\nrbf}
-	\sizealign{\nrbf}{N_{surf}}
-	\sizealign{N_{surf}}{\ndes}
+	&&\nxn{\nxvol}{\nrbf}
+	&&\nxn{\nrbf}{\nrbf}
+	&&\nxn{\nrbf}{N_{surf}}
+	&&\nxn{N_{surf}}{\ndes}
 \label{eq:meshsenssize}
 \end{alignedat}
 \end{equation}
@@ -451,21 +418,21 @@ This time, the cost function is augmented in Equation \ref{eq:meshadjointDerivat
 	\sqbr{
 		\del{L}{\bw}
 		+
-		\mbs{\psi}^T
+		\bpsi^T
 		\del{\bR}{\bw}
 	}
 	\Dt{\bw}{\balfa}
 	\\
 	&\quad+
 	\sqbr{
-		\del{L}{\mbf{x}_{vol}}
+		\del{L}{\xvol}
 		+
-		\mbs{\psi}^T
-		\del{\bR}{\mbf{x}_{vol}}
+		\bpsi^T
+		\del{\bR}{\xvol}
 		+
 		\blam^T
 	}
-	\Dt{\mbf{x}_{vol}}{\balfa}
+	\Dt{\xvol}{\balfa}
 	\\
 	&\quad-
 	\blam^T
@@ -486,22 +453,22 @@ Second, the mesh adjoint can easily be solved in Equation \ref{eq:meshadjoint} a
 \begin{alignedat}{6}
 	&\blam^T 
 	&&= 
-	-(&&\del{L}{\mbf{x}_{vol}}
+	-(&&\del{L}{\xvol}
 	&&+
-	&&\mbs{\psi}^T
-	&&\del{\bR}{\mbf{x}_{vol}})
+	&&\bpsi^T
+	&&\del{\bR}{\xvol})
 \\	                   
 	&\smt{\left[1 \times \nxvol \right]}
 	&&=
-	\sizealign{1}{\nxvol}
+	&&\nxn{1}{\nxvol}
 	&&+
-	\sizealign{1}{\ncell}
-	\sizealign{\ncell}{\nxvol}
+	&&\nxn{1}{\ncell}
+	&&\nxn{\ncell}{\nxvol}
 \label{eq:meshadjoint}
 \end{alignedat}
 \end{equation}
 
-After both adjoints are solved, the gradient of the functional can be evaluated as Equation \ref{eq:gradAfter2adjoints}.
+After both adjoint variables are solved, the gradient of the functional can be evaluated as Equation \ref{eq:gradAfter2adjoints}.
 Note that it is possible to take transpose of the gradient in order to solve a smaller system of equation.
 
 \begin{equation}
@@ -515,7 +482,7 @@ Note that it is possible to take transpose of the gradient in order to solve a s
 \label{eq:gradAfter2adjoints}
 \end{equation}
 
-Equation \ref{eq:grad2adjointsT} shows that the $\mbf{A}$ matrix multipliesa vector with 1 column as opposed to $\ndes$ and the $\mbf{M}^T$ solves for 1 column instead of $\ndes$.
+Equation \ref{eq:grad2adjointsT} shows that the $\mbf{A}$ matrix multiplies a vector with 1 column as opposed to $\ndes$ and the $\mbf{M}^T$ solves for 1 column instead of $\ndes$.
 Therefore, the calculation of the gradient is now completely independent of the number of design variables.
 
 \begin{equation}
@@ -542,14 +509,608 @@ Therefore, the calculation of the gradient is now completely independent of the 
 	&&{\blam}
 \\	                   
 	&\smt{\left[\nrbf \times \nrbf \right]}
-	\sizealign{\nrbf}{1}
+	&&\nxn{\nrbf}{1}
 	&&=
-	\sizealign{\nrbf}{\nxvol}
-	\sizealign{\nxvol}{1}
+	&&\nxn{\nrbf}{\nxvol}
+	&&\nxn{\nxvol}{1}
 \label{eq:meshadjointb}
 \end{alignedat}
 \end{equation}
 
+\section*{Second-Order Sensitivities}
 
+The analytical evaluation of the Hessian has been derived by Papadimitriou and Giannokoglou.
+The four different ways uses a combination of direct method and adjoint variable for the evaluation of the first and second derivatives.
+\begin{itemize}
+\item Direct-Direct (DD): $\ndes + \ndes(\ndes + 1)/2$
+\item Adjoint-Direct (AD): $2\ndes + 1$
+\item Adjoint-Adjoint (AA):$2\ndes + 1$
+\item Direct-Adjoint (DA):$\ndes$
+\end{itemize}
+
+\newpage
+\subsection*{Direct-Direct}
+
+The direct-direct method uses the direct differentiation method for the first derivative as shown in Equation \ref{eq:dIdDes_plain2} \& \ref{eq:dRdDes2}.
+
+\begin{equation}
+	\Dt{L( \bw, \xvol ) } {\balfa}
+	= 
+    \del{L}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{L}{\xvol}
+	\Dt{\xvol}{\balfa}
+	\label{eq:dIdDes_plain2}
+\end{equation}
+
+\begin{equation}
+	\Dt{\bR( \bw, \xvol ) } {\balfa}
+	= 
+    \del{\bR}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
+	= \mbf{0}
+	\label{eq:dRdDes2}
+\end{equation}
+
+The full formulation of the Hessian of the cost function is shown in Equation \ref{eq:DDHessian} with its matrix sizes shown in Equation \ref{eq:DDHessiansize}.
+The term $d\bw/d\balfa$ requires the solution of Equation \ref{eq:dWdDes}, which requires $\ndes$ system evaluations.
+
+\begin{equation}
+\begin{split}
+	\DDt{L}{\balfa} 
+	=&
+	\trans{\Dt{\bw}{\balfa}}
+	\ddelm{L}{\bw}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\ddel{L}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\del{L}{\bw}
+	{\color{red}\DDt{\bw}{\balfa}}
+	\\
+	&+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddelm{L}{\xvol}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddel{L}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\del{L}{\xvol}
+	\DDt{\xvol}{\balfa}
+\label{eq:DDHessian}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+	\nxn{\ndes}{\ndes}
+	=
+	&
+	\blue{\nxn{\ndes}{\ncell}}
+	\nxn{\ncell}{\nxvol}
+	\blue{\nxn{\nxvol}{\ndes}}
+	\\&
+	+
+	\nxn{\ndes}{\ncell}
+	\nxn{\ncell}{\ncell}
+	\nxn{\ncell}{\ndes}
+	\\&
+	+
+	\nxn{1}{\ncell}
+	{\color{red}\nxnxn{\ncell}{\ndes}{\ndes}}
+	\\&
+	+
+	\nxn{\ndes}{\nxvol}
+	\nxn{\nxvol}{\ncell}
+	\blue{\nxn{\ncell}{\ndes}}
+	\\&
+	+
+	\nxn{\ndes}{\nxvol}
+	\nxn{\nxvol}{\nxvol}
+	\nxn{\nxvol}{\ndes}
+	\\&
+	+
+	\nxn{1}{\nxvol}
+	\nxnxn{\nxvol}{\ndes}{\ndes}
+\label{eq:DDHessiansize}
+\end{split}
+\end{equation}
+
+The term $d^2\bw/d\balfa^2$ can be found in the second-order direct-differentiation of the flow residual.
+The term requires the solution of Equation \ref{eq:ddWdDesdDes}, which requires $\ndes(\ndes+1)/2$ system evaluations.
+\begin{equation}
+\begin{split}
+	\DDt{\bR}{\balfa} 
+	=&
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\ddelm{\bR}{\bw}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\ddel{\bR}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\del{\bR}{\bw}
+	\DDt{\bw}{\balfa}
+	\\
+	&+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddelm{\bR}{\xvol}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddel{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\del{\bR}{\xvol}
+	\red{\DDt{\xvol}{\balfa}}
+	=
+	\mbf{0}
+\label{eq:ddRdDesdDes}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+	\del{\bR}{\bw}
+	\red{\DDt{\bw}{\balfa}}
+	=
+	-
+	&
+	\left(
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\ddelm{\bR}{\bw}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\ddel{\bR}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	\right.
+	\\
+	&+\left.
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddelm{\bR}{\xvol}{\bw}
+	\Dt{\bw}{\balfa}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddel{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\del{\bR}{\xvol}
+	\DDt{\xvol}{\balfa}
+	\right)
+\label{eq:ddWdDesdDes}
+\end{split}
+\end{equation}
+
+\begin{equation}
+	\nxn{\ncell}{\ncell}
+	\red{\nxnxn{\ncell}{\ndes}{\ndes}}
+	=
+	\nxnxn{\ncell}{\ndes}{\ndes}
+\end{equation}
+
+A total of $\ndes + \ndes(\ndes+1)/2$ system evaluations are required.
+
+\newpage
+\subsection*{Adjoint-Direct}
+The adjoint-direct method starts with the gradient of the augmented cost function derived from the adjoint in Equation \ref{eq:dIdDesAfterAdjoint2}.
+It is then differentiated directly to give Equation \ref{eq:ADHessian}.
+
+\begin{equation}
+	\Dt{L_a}{\balfa} = 
+	\del{L}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\bpsi^T
+	\del{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
+	\label{eq:dIdDesAfterAdjoint2}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+	\DDt{L_a}{\balfa} = 
+	&
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddel{L}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\ddelm{L}{\xvol}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\del{L}{\xvol}
+	\DDt{\xvol}{\balfa}
+	\\
+	&+
+	\trans{
+	\del{\bR}{\xvol}
+	\Dt{\xvol}{\balfa}
+	}
+	\red{\Dt{\bpsi^T}{\balfa}}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\left(
+	\green{\bpsi}^T
+	\ddel{\bR}{\xvol}
+	\right)
+	\Dt{\xvol}{\balfa}
+	\\
+	&+
+	\trans{\Dt{\xvol}{\balfa}}
+	\left(
+	\green{\bpsi}^T
+	\ddelm{\bR}{\xvol}{\bw}
+	\right)
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\green{\bpsi}^T
+	\del{\bR}{\xvol}
+	\DDt{\xvol}{\balfa}
+\label{eq:ADHessian}
+\end{split}
+\end{equation}
+
+The first order flow sensitivities $d\bw/d\balfa$ are evaluated from Equation \ref{eq:dWdDes} and require $\ndes$ system evaluations.
+The adjoint variable is evaluated in Equation \ref{eq:adjoint} at the cost of 1 system evaluation and is the reason Equation \ref{eq:dIdDesAfterAdjoint2} holds true.
+
+That leaves $d\bpsi^T/d\balfa$ to be evaluated.
+The term can be found in the direct differentiation of the adjoint residual giving Equation \ref{eq:dadjresdDes}.
+Solving Equation \ref{eq:dadjdDes} costs $\ndes$ system evaluations.
+
+\begin{equation}
+\begin{split}
+	\Dt{\bR^{\bpsi}}{\balfa}
+	=&
+	\ddelm{L}{\bw}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\ddel{L}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\trans{\del{\bR}{\bw}}
+	\red{\Dt{\bpsi^T}{\balfa}}
+	+
+	\bpsi^T
+	\ddelm{\bR}{\bw}{\xvol}
+	\Dt{\xvol}{\balfa}
+	+
+	\bpsi^T
+	\ddel{\bR}{\bw}
+	\blue{\Dt{\bw}{\balfa}}
+	\\
+	=&
+	\left[
+	\ddelm{L}{\bw}{\xvol}
+	+
+	\bpsi^T
+	\ddelm{\bR}{\bw}{\xvol}
+	\right]
+	\Dt{\xvol}{\balfa}
+	+
+	\left[
+		\ddel{L}{\bw}
+		+
+		\bpsi^T
+		\ddel{\bR}{\bw}
+	\right]
+	\blue{\Dt{\bw}{\balfa}}
+	+
+	\trans{\del{\bR}{\bw}}
+	\red{\Dt{\bpsi^T}{\balfa}} = \mbf{0}
+\label{eq:dadjresdDes}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{alignedat}{4}
+	&\trans{\del{\bR}{\bw}}
+	&&\red{\Dt{\bpsi^T}{\balfa}}
+	=
+	-\left(
+	\left[
+	\ddelm{L}{\bw}{\xvol}
+	+
+	\bpsi^T
+	\ddelm{\bR}{\bw}{\xvol}
+	\right]
+	\right.&&
+	\left.
+	\Dt{\xvol}{\balfa}
+	+
+	\left[
+		\ddel{L}{\bw}
+		+
+		\bpsi^T
+		\ddel{\bR}{\bw}
+	\right]
+	\blue{\Dt{\bw}{\balfa}}
+	\right)
+\\
+	& \nxn{\ncell}{\ncell}
+	&& \nxn{\ncell}{\ndes}
+	=
+	&& \nxn{\ncell}{\ndes}
+\label{eq:dadjdDes}
+\end{alignedat}
+\end{equation}
+
+A total of $2\ndes+1$ system evaluations are required to compute the Hessian using the adjoint-direct approach.
+
+\newpage
+\subsection*{Adjoint-Adjoint}
+Looking at the previous method, it is possible to add adjoint variables to eliminate some expensive terms by augmenting derivative of the augmented cost function like in Equation \ref{eq:ADHessian}.
+
+\begin{equation}
+	\DDt{L_a^*}{\balfa} = 
+	\DDt{L_a}{\balfa}
+	+
+	\bbeta^T
+	\Dt{\bR}{\balfa}
+	+
+	\bgam^T
+	\Dt{\bR^{\bpsi}}{\balfa}
+\label{eq:augmentedHessian_simple}
+\end{equation}
+
+The expression can be fully expanded by inserting Equation \ref{eq:ADHessian}, \ref{eq:dRdDes} and \ref{eq:dadjresdDes} into Equation \ref{eq:augmentedHessian_simple}.
+The terms are then factored and gives Equation \ref{eq:augmentedHessian_exp}
+
+\begin{equation}
+\begin{split}
+	\DDt{L_a^*}{\balfa} = 
+	&
+	\del{L}{\xvol}
+	\DDt{\xvol}{\balfa}
+	+
+	\green{\bpsi}^T
+	\del{\bR}{\xvol}
+	\DDt{\xvol}{\balfa}
+	\\&
+	+
+%%%%%%%%
+	\left\{
+		\trans{\Dt{\xvol}{\balfa}}
+		\ddel{L}{\xvol}
+		+
+		\trans{\Dt{\xvol}{\balfa}}
+		\left(
+		\green{\bpsi}^T
+		\ddel{\bR}{\xvol}
+		\right)
+		+
+		\bbeta^T
+			\del{\bR}{\xvol}
+		\right.\\&\left. \quad\quad
+		+
+		\Dt{\xvol}{\balfa}
+		\bgam^T
+		\ddelm{L}{\bw}{\xvol}
+		+
+		\bgam^T
+		\bpsi^T
+		\ddelm{\bR}{\bw}{\xvol}
+	\right\}
+	\Dt{\xvol}{\balfa}
+%%%%%%%%
+	\\&+
+	\left\{
+		\trans{\Dt{\xvol}{\balfa}}
+		\ddelm{L}{\xvol}{\bw}
+		+
+		\trans{\Dt{\xvol}{\balfa}}
+		\left(
+		\green{\bpsi}^T
+		\ddelm{\bR}{\xvol}{\bw}
+		\right)
+	\right.\\&\left. \quad\quad
+		+
+		\bbeta^T
+		\del{\bR}{\bw}
+		+
+		\bgam^T
+		\ddel{L}{\bw}
+		+
+		\bgam^T
+		\left(
+		\bpsi^T
+		\ddel{\bR}{\bw}
+		\right)
+	\right\}
+	\blue{\Dt{\bw}{\balfa}}
+	\\&
+	+
+%%%%%%%%
+	\left\{
+		\trans{
+		\del{\bR}{\xvol}
+		\Dt{\xvol}{\balfa}
+		}
+		+
+		\bgam^T
+		\trans{\del{\bR}{\bw}}
+	\right\}
+	\red{\Dt{\bpsi^T}{\balfa}}
+\label{eq:augmentedHessian_exp}
+\end{split}
+\end{equation}
+
+The derivative of the flow adjoint can be eliminated by defining $\bgam$ to make the last term zero.
+Unfortunately, as seen in Equation \ref{eq:AAsolve1}, the cost of eliminating $d\bpsi^T/d\balfa$ is the same as solving for it.
+Evaluating $\bgam$ costs $\ndes$ system evaluations.
+
+\begin{equation}
+\begin{alignedat}{5}
+	&\del{\bR}{\bw}
+	&&\bgam
+	&&=
+	&&\del{\bR}{\xvol}
+	&&\Dt{\xvol}{\balfa}
+	\\
+	& \nxn{\ncell}{\ncell}
+	&&\nxn{\ncell}{\ndes}
+	&&=
+	&&\nxn{\ncell}{\nxvol}
+	&&\nxn{\nxvol}{\ndes}
+\label{eq:AAsolve1}
+\end{alignedat}
+\end{equation}
+
+The same unfortunate scenario happens for $d\bw/d\balfa$ where eliminating it costs $\ndes$ flow evaluations as seen in Equation \ref{eq:AAsolve2}
+
+\begin{equation}
+\begin{alignedat}{5}
+	&\del{\bR}{\bw}^T
+	&&\bbeta
+	&&= -
+	\left\{
+	\trans{\Dt{\xvol}{\balfa}}
+	\right. && \left.
+	\ddelm{L}{\xvol}{\bw}
+	+ ...
+	\right\}^T
+	\\
+	& \nxn{\ncell}{\ncell}
+	&&\nxn{\ncell}{\ndes}
+	&&=
+	&&\nxn{\ncell}{\ndes}
+\label{eq:AAsolve2}
+\end{alignedat}
+\end{equation}
+
+Finally, the adjoint-adjoint Hessian after solving for all the adjoint variables reduces to Equation \ref{eq:AAHessian}.
+
+\begin{equation}
+\begin{split}
+	\DDt{L_a^*}{\balfa} = 
+	&
+	\del{L}{\xvol}
+	\DDt{\xvol}{\balfa}
+	+
+	\green{\bpsi}^T
+	\del{\bR}{\xvol}
+	\DDt{\xvol}{\balfa}
+	\\&
+	+
+%%%%%%%%
+	\left\{
+		\trans{\Dt{\xvol}{\balfa}}
+		\ddel{L}{\xvol}
+		+
+		\trans{\Dt{\xvol}{\balfa}}
+		\left(
+		\green{\bpsi}^T
+		\ddel{\bR}{\xvol}
+		\right)
+		+
+		\bbeta^T
+			\del{\bR}{\xvol}
+		\right.\\&\left. \quad\quad
+		+
+		\Dt{\xvol}{\balfa}
+		\bgam^T
+		\ddelm{L}{\bw}{\xvol}
+		+
+		\bgam^T
+		\bpsi^T \ddelm{\bR}{\bw}{\xvol}
+	\right\}
+	\Dt{\xvol}{\balfa}
+\label{eq:AAHessian}
+\end{split}
+\end{equation}
+
+A total of $2\ndes + 1$ system evaluations are required to solve every adjoint.
+
+\newpage
+\subsection*{Direct-Adjoint}
+
+The direct-adjoint method is directly linked to the direct-direct approach.
+The Hessian of the cost function expression is augmented with the Hessian of the flow residual as seen in Equation \ref{eq:DAHessian_simp}.
+Equation \ref{eq:DDHessian} \& \ref{eq:ddRdDesdDes}.
+
+\begin{equation}
+\begin{split}
+	\DDt{L^{**}}{\balfa} 
+	=
+	\DDt{L}{\balfa} 
+	+
+	\bpsi^T
+	\DDt{\bR}{\balfa} 
+\label{eq:DAHessian_simp}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+	\DDt{L**}{\balfa} 
+	=&
+	\trans{\Dt{\bw}{\balfa}}
+	\left\{
+		\ddelm{L}{\bw}{\xvol}
+		+
+		\bpsi^T
+		\ddelm{\bR}{\bw}{\xvol}
+	\right\}
+	\Dt{\xvol}{\balfa}
+	+
+	\blue{\trans{\Dt{\bw}{\balfa}}}
+	\left\{
+		\ddel{L}{\bw}
+		+
+		\bpsi^T
+		\ddel{\bR}{\bw}
+	\right\}
+	\blue{\Dt{\bw}{\balfa}}
+	\\&+
+	\left\{
+		\del{L}{\bw}
+		+
+		\bpsi^T
+		\del{\bR}{\bw}
+	\right\}
+	{\color{red}\DDt{\bw}{\balfa}}
+	+
+	\trans{\Dt{\xvol}{\balfa}}
+	\left\{
+		\ddelm{L}{\xvol}{\bw}
+		+
+		\bpsi^T
+		\ddelm{\bR}{\xvol}{\bw}
+	\right\}
+	\blue{\Dt{\bw}{\balfa}}
+	\\&+
+	\trans{\Dt{\xvol}{\balfa}}
+	\left\{
+		\ddel{L}{\xvol}
+		+
+		\bpsi^T
+		\ddel{\bR}{\xvol}
+	\right\}
+	\Dt{\xvol}{\balfa}
+	+
+	\left\{
+		\del{L}{\xvol}
+		+
+		\bpsi^T
+		\del{\bR}{\xvol}
+	\right\}
+	\DDt{\xvol}{\balfa}
+\label{eq:DAHessian}
+\end{split}
+\end{equation}
+
+Looking at Equation \ref{eq:DAHessian}, the expensive $d^2\bw/d\balfa^2$ term can now be ignored by solving the adjoint.
+Furthermore, it only requires 1 system evaluation as seen in Equation \ref{eq:adjoint}.
+The first-order flow sensitivities still have to be solved at the cost of $\ndes$.
+Therefore, the total cost of $\ndes + \ndes(\ndes+1)/2$ system evaluations are required, making it the cheapest of the four methods.
 
 \end{document}
