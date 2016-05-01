@@ -572,7 +572,7 @@ The term $d\bw/d\balfa$ requires the solution of Equation \ref{eq:dWdDes}, which
 	\blue{\Dt{\bw}{\balfa}}
 	+
 	\del{L}{\bw}
-	{\color{red}\DDt{\bw}{\balfa}}
+	\red{\DDt{\bw}{\balfa}}
 	\\
 	&+
 	\trans{\Dt{\xvol}{\balfa}}
@@ -605,7 +605,7 @@ The term $d\bw/d\balfa$ requires the solution of Equation \ref{eq:dWdDes}, which
 	\\&
 	+
 	\nxn{1}{\ncell}
-	{\color{red}\nxnxn{\ncell}{\ndes}{\ndes}}
+	\red{\nxnxn{\ncell}{\ndes}{\ndes}}
 	\\&
 	+
 	\nxn{\ndes}{\nxvol}
@@ -740,7 +740,7 @@ It is then differentiated directly to give Equation \ref{eq:ADHessian}.
 	+
 	\trans{\Dt{\xvol}{\balfa}}
 	\left(
-	\green{\bpsi}^T
+	\bpsi^T
 	\ddel{\bR}{\xvol}
 	\right)
 	\Dt{\xvol}{\balfa}
@@ -748,12 +748,12 @@ It is then differentiated directly to give Equation \ref{eq:ADHessian}.
 	&+
 	\trans{\Dt{\xvol}{\balfa}}
 	\left(
-	\green{\bpsi}^T
+	\bpsi^T
 	\ddelm{\bR}{\xvol}{\bw}
 	\right)
 	\blue{\Dt{\bw}{\balfa}}
 	+
-	\green{\bpsi}^T
+	\bpsi^T
 	\del{\bR}{\xvol}
 	\DDt{\xvol}{\balfa}
 \label{eq:ADHessian}
@@ -872,7 +872,7 @@ The terms are then factored and gives Equation \ref{eq:augmentedHessian_exp}
 	\del{L}{\xvol}
 	\DDt{\xvol}{\balfa}
 	+
-	\green{\bpsi}^T
+	\bpsi^T
 	\del{\bR}{\xvol}
 	\DDt{\xvol}{\balfa}
 	\\&
@@ -884,7 +884,7 @@ The terms are then factored and gives Equation \ref{eq:augmentedHessian_exp}
 		+
 		\trans{\Dt{\xvol}{\balfa}}
 		\left(
-		\green{\bpsi}^T
+		\bpsi^T
 		\ddel{\bR}{\xvol}
 		\right)
 		+
@@ -909,12 +909,12 @@ The terms are then factored and gives Equation \ref{eq:augmentedHessian_exp}
 		+
 		\trans{\Dt{\xvol}{\balfa}}
 		\left(
-		\green{\bpsi}^T
+		\bpsi^T
 		\ddelm{\bR}{\xvol}{\bw}
 		\right)
 	\right.\\&\left. \quad\quad
 		+
-		\bbeta^T
+		{\color{cyan}\bbeta}^T
 		\del{\bR}{\bw}
 		+
 		\bgam^T
@@ -936,7 +936,7 @@ The terms are then factored and gives Equation \ref{eq:augmentedHessian_exp}
 		\Dt{\xvol}{\balfa}
 		}
 		+
-		\bgam^T
+		\green{\bgam}^T
 		\trans{\del{\bR}{\bw}}
 	\right\}
 	\red{\Dt{\bpsi^T}{\balfa}}
@@ -951,7 +951,7 @@ Evaluating $\bgam$ costs $\ndes$ system evaluations.
 \begin{equation}
 \begin{alignedat}{5}
 	&\del{\bR}{\bw}
-	&&\bgam
+	&&\green{\bgam}
 	&&=
 	&&\del{\bR}{\xvol}
 	&&\Dt{\xvol}{\balfa}
@@ -970,7 +970,7 @@ The same unfortunate scenario happens for $d\bw/d\balfa$ where eliminating it co
 \begin{equation}
 \begin{alignedat}{5}
 	&\del{\bR}{\bw}^T
-	&&\bbeta
+	&&{\color{cyan}\bbeta}
 	&&= -
 	\left\{
 	\trans{\Dt{\xvol}{\balfa}}
@@ -996,7 +996,7 @@ Finally, the adjoint-adjoint Hessian after solving for all the adjoint variables
 	\del{L}{\xvol}
 	\DDt{\xvol}{\balfa}
 	+
-	\green{\bpsi}^T
+	\bpsi^T
 	\del{\bR}{\xvol}
 	\DDt{\xvol}{\balfa}
 	\\&
@@ -1008,7 +1008,7 @@ Finally, the adjoint-adjoint Hessian after solving for all the adjoint variables
 		+
 		\trans{\Dt{\xvol}{\balfa}}
 		\left(
-		\green{\bpsi}^T
+		\bpsi^T
 		\ddel{\bR}{\xvol}
 		\right)
 		+
@@ -1074,10 +1074,10 @@ Equation \ref{eq:DDHessian} \& \ref{eq:ddRdDesdDes}.
 	\left\{
 		\del{L}{\bw}
 		+
-		\bpsi^T
+		\green{\bpsi^T}
 		\del{\bR}{\bw}
 	\right\}
-	{\color{red}\DDt{\bw}{\balfa}}
+	\red{\DDt{\bw}{\balfa}}
 	+
 	\trans{\Dt{\xvol}{\balfa}}
 	\left\{
@@ -1110,7 +1110,7 @@ Equation \ref{eq:DDHessian} \& \ref{eq:ddRdDesdDes}.
 
 Looking at Equation \ref{eq:DAHessian}, the expensive $d^2\bw/d\balfa^2$ term can now be ignored by solving the adjoint.
 Furthermore, it only requires 1 system evaluation as seen in Equation \ref{eq:adjoint}.
-The first-order flow sensitivities still have to be solved at the cost of $\ndes$.
+The first-order flow sensitivities still have to be solved at the cost of $\ndes$ from Equation \ref{eq:dWdDes}.
 Therefore, the total cost of $\ndes + \ndes(\ndes+1)/2$ system evaluations are required, making it the cheapest of the four methods.
 
 \end{document}
