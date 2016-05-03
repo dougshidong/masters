@@ -409,10 +409,10 @@ This time, the cost function is augmented in Equation \ref{eq:meshadjointDerivat
 	\Dt{L( \bw, \xvol )}{\balfa} 
 	+
 	\bpsi^T
-	\Dt{\bR( \bw, \xvol }{\balfa})
+	\Dt{\bR( \bw, \xvol )}{\balfa}
 	+
 	\blam^T
-	\Dt{\bR^{\mbf{x}}(\xvol }{\balfa})
+	\Dt{\bR^{\mbf{x}}(\xvol)}{\balfa}
 \\
 	&=
 	\sqbr{
@@ -594,14 +594,14 @@ The term $d\bw/d\balfa$ requires the solution of Equation \ref{eq:dWdDes}, which
 	\nxn{\ndes}{\ndes}
 	=
 	&
-	\blue{\nxn{\ndes}{\ncell}}
+	\nxn{\ndes}{\ncell}
 	\nxn{\ncell}{\nxvol}
-	\blue{\nxn{\nxvol}{\ndes}}
+	\nxn{\nxvol}{\ndes}
 	\\&
 	+
-	\nxn{\ndes}{\ncell}
+	\blue{\nxn{\ndes}{\ncell}}
 	\nxn{\ncell}{\ncell}
-	\nxn{\ncell}{\ndes}
+	\blue{\nxn{\ncell}{\ndes}}
 	\\&
 	+
 	\nxn{1}{\ncell}
@@ -1051,7 +1051,7 @@ Equation \ref{eq:DDHessian} \& \ref{eq:ddRdDesdDes}.
 
 \begin{equation}
 \begin{split}
-	\DDt{L**}{\balfa} 
+	\DDt{L^{**}}{\balfa} 
 	=&
 	\trans{\Dt{\bw}{\balfa}}
 	\left\{
